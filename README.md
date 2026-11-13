@@ -1,6 +1,29 @@
 作者频道：https://www.youtube.com/@SHITOUGE
 - TG 粉丝交流群：https://t.me/ROTOGE
 ---
+# CFAPEX 1.4 更新说明
+
+## 更新内容
+
+- 修复 VLESS/XHTTP 的传输实现：由 `stream-one` 改为 `packet-up`，使用 `CfapexXhttpSession` Durable Object 保存跨请求会话。未绑定 `XHTTP_SESSION` 或设置 `XHTTP=0` 时不下发 XHTTP 节点，避免订阅导入不可用配置。
+- 新增 Workers 自动部署脚本。通过 `tools/deploy-cfapex-mainline.mjs` 部署时，会创建或复用 XHTTP Durable Object 并绑定 `XHTTP_SESSION`；提供 Wrangler 模板与操作说明。
+- 概览订阅区支持自定义下发节点数量，最多 1000 条；数量限制作用于最终订阅节点条目。
+- 调整 Clash 规则订阅：`.cn` 域名及中国 IP 直连，其他流量按代理规则处理。
+- 保留 VLESS/WS、Trojan/WS 与现有自定义优选 IP、Proxy IP、出站 IP 功能。
+
+## 部署与兼容性
+
+- Workers：使用 `CFAPEX-worker.1.4.js`。若需要 XHTTP，按项目中的自动部署说明运行脚本，或用 Wrangler 配置部署；单独在控制台粘贴 JS 不会自动创建 Durable Object 绑定。
+- Pages：使用 `CFAPEX-Pages-1.4.zip`。仅上传 ZIP 无法创建 XHTTP Durable Object，XHTTP 需要额外部署并绑定对应 Worker；VLESS/WS 与 Trojan/WS 不依赖该绑定。
+- XHTTP 节点需要支持 XHTTP 的 Xray 客户端核心。v2rayN 使用 Xray 核心；sing-box 核心不支持 XHTTP，可使用 VLESS/WS 或 Trojan/WS。
+- 更新部署后，请在客户端重新更新订阅并删除旧的 `stream-one` 节点。线上是否可连接还取决于域名的 Cloudflare 安全设置及客户端网络，不能仅凭订阅下发判断。
+
+## 交付文件
+
+- Workers：`dist/CFAPEX-worker.1.4.js`
+- Pages：`dist/CFAPEX-Pages-1.4.zip`
+- 自动部署说明：`docs/CFAPEX-Workers-XHTTP-自动部署.md`
+
 CFAPEX 1.3 更新日志
 
 更新范围：自定义优选 IP 支持一次保存 1000 条、GitHub Raw 列表拉取超时修复之后的改动。 
